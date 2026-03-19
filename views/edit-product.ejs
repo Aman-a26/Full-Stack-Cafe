@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Product - Cafe Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans m-0 flex justify-center items-center min-h-screen">
+
+    <div class="edit-card bg-white p-10 rounded-xl shadow-2xl w-full max-w-[500px]">
+        <h2 class="text-2xl font-bold mb-5 text-gray-800 border-b-2 border-indigo-500 pb-2">Edit Product #<%= product.id %></h2>
+        
+        <form action="/edit-product/<%= product.id %>" method="POST" enctype="multipart/form-data">
+            <div class="form-group mb-4">
+                <label class="block mb-1 text-gray-600 font-semibold text-sm">Product Name</label>
+                <input type="text" name="name" value="<%= product.name %>" required 
+                       class="w-full p-3 border border-gray-300 rounded-md text-base outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/10 transition-all">
+            </div>
+
+            <div class="form-group mb-4">
+                <label class="block mb-1 text-gray-600 font-semibold text-sm">Category</label>
+                <select name="category" 
+                        class="w-full p-3 border border-gray-300 rounded-md text-base outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/10 transition-all bg-white">
+                    <option value="Coffee" <%= product.category === 'Coffee' ? 'selected' : '' %>>Coffee</option>
+                    <option value="Snacks" <%= product.category === 'Snacks' ? 'selected' : '' %>>Snacks</option>
+                    <option value="Desserts" <%= product.category === 'Desserts' ? 'selected' : '' %>>Desserts</option>
+                    <option value="Beverages" <%= product.category === 'Beverages' ? 'selected' : '' %>>Beverages</option>
+                </select>
+            </div>
+
+            <div class="form-group mb-4">
+                <label class="block mb-1 text-gray-600 font-semibold text-sm">Price (₹)</label>
+                <input type="number" name="price" value="<%= product.price %>" step="0.01" required 
+                       class="w-full p-3 border border-gray-300 rounded-md text-base outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/10 transition-all">
+            </div>
+
+            <div class="form-group mb-4">
+                <label class="block mb-1 text-gray-600 font-semibold text-sm">Stock Count</label>
+                <input type="number" name="stock" value="<%= product.stock %>" required 
+                       class="w-full p-3 border border-gray-300 rounded-md text-base outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/10 transition-all">
+            </div>
+
+            <div class="form-group mb-4">
+                <label class="block mb-1 text-gray-600 font-semibold text-sm">Description</label>
+                <textarea name="description" rows="3" required
+                          class="w-full p-3 border border-gray-300 rounded-md text-base outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/10 transition-all"><%= product.description %></textarea>
+            </div>
+
+            <div class="form-group mb-4">
+                <label class="block mb-1 text-gray-600 font-semibold text-sm">Current Image</label>
+                <% if (product.image) { %>
+                    <img src="<%= product.image %>" alt="<%= product.name %>" class="w-24 h-24 object-cover rounded-md mb-2 border border-gray-200">
+                <% } else { %>
+                    <p class="text-xs text-gray-400 mb-2">No image available.</p>
+                <% } %>
+                
+                <label class="block mb-1 text-gray-600 font-semibold text-sm">Upload New Image (Optional)</label>
+                <input type="file" name="image" accept="image/*"
+                       class="w-full file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 p-3 border border-gray-300 rounded-md text-base outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/10 transition-all">
+            </div>
+
+            <div class="btn-container flex gap-3 mt-6">
+                <button type="submit" class="btn-save flex-[2] bg-gradient-to-r from-indigo-500 to-purple-600 text-white p-3 rounded-md font-semibold hover:opacity-90 transition-opacity">
+                    Save Changes
+                </button>
+                <a href="/admin-dashboard" class="btn-cancel flex-1 bg-gray-200 text-gray-700 no-underline text-center p-3 rounded-md font-semibold hover:bg-gray-300 transition-colors">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+
+</body>
+</html>

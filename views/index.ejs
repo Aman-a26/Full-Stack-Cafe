@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cafe Food - Welcome</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brandStart: '#667eea',
+                        brandEnd: '#764ba2',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .cart-overlay { transition: right 0.3s ease; }
+        @keyframes slideIn { from { transform: translateX(400px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .animate-slideIn { animation: slideIn 0.3s ease-in; }
+    </style>
+</head>
+<body class="bg-[#f8f9fa] text-gray-800 font-sans overflow-x-hidden scroll-smooth">
+    
+    <div id="message" class="fixed top-5 right-5 px-6 py-4 rounded shadow-lg text-white font-semibold z-[3000] hidden animate-slideIn"></div>
+
+    <div id="cartSidebar" class="cart-overlay fixed -right-[450px] top-0 w-full max-w-[420px] h-full bg-white shadow-2xl z-[2000] flex flex-col p-5">
+        <div class="flex justify-between items-center border-b-2 border-gray-100 pb-3 mb-5">
+            <h3 class="text-xl font-bold">My Order</h3>
+            <span class="text-3xl cursor-pointer hover:text-red-500" onclick="toggleCart()">&times;</span>
+        </div>
+        <div id="cart-items-display" class="flex-grow overflow-y-auto"></div>
+        <div class="border-t-2 border-gray-100 pt-4 mt-2">
+            <div class="flex justify-between text-xl font-bold mb-4 text-brandEnd">
+                <span>Total:</span>
+                <span>₹<span id="cart-total">0</span></span>
+            </div>
+            <button class="w-full h-[45px] bg-gradient-to-r from-brandStart to-brandEnd text-white rounded-md font-bold hover:opacity-90 transition-opacity" onclick="checkout()">Proceed to Checkout</button>
+        </div>
+    </div>
+    
+    <nav class="bg-gradient-to-r from-brandStart to-brandEnd px-8 py-4 text-white flex justify-between items-center shadow-lg sticky top-0 z-[1000]">
+        <h1 class="text-2xl font-bold flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8 mr-2">
+                <path d="M10.5 1.875a.75.75 0 0 0-1.5 0v8.25c0 .414.336.75.75.75h6.375a3.75 3.75 0 0 1 0 7.5H5.25a.75.75 0 0 0 0 1.5h9.375a5.25 5.25 0 0 0 0-10.5H10.5V1.875Z" />
+            </svg>
+            <span>Cafe Food</span>
+        </h1>
+        <div class="flex items-center gap-5">
+            <a href="/" class="hidden md:block hover:opacity-80 transition-opacity">Home</a>
+            <button class="bg-white/20 border border-white px-4 py-2 rounded font-bold hover:bg-white/30 transition-all" onclick="toggleCart()">
+                🛒 Cart (<span id="cart-count">0</span>)
+            </button>
+            <% if (user) { %>
+                <span class="font-semibold">Hi, <%= user.username %></span>
+                <a href="/logout" class="hover:opacity-80 ml-2">Logout</a>
+            <% } else { %>
+                <a href="/login" class="hover:opacity-80">Login</a>
+                <a href="/signup" class="hover:opacity-80">Sign Up</a>
+            <% } %>
+        </div>
+    </nav>
+
+    <header class="bg-gradient-to-br from-brandStart to-brandEnd text-white py-20 px-5 text-center">
+        <h2 class="text-4xl md:text-6xl font-bold mb-5">Welcome to Cafe Food 🍰</h2>
+        <p class="text-lg md:text-xl mb-8 opacity-90">Your favorite place for delicious coffee, pastries, and food</p>
+        <div class="flex gap-4 justify-center flex-wrap">
+            <a href="#products" class="bg-white text-brandStart px-10 py-4 rounded font-bold text-lg hover:-translate-y-1 transition-transform">Browse Menu</a>
+            <a href="/signup" class="border-2 border-white text-white px-10 py-4 rounded font-bold text-lg hover:-translate-y-1 transition-transform">Get Started</a>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-5 py-16" id="products">
+        <h2 class="text-center text-4xl font-bold mb-12">Product Items</h2>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            <% if (typeof products !== 'undefined' && products.length > 0) { %>
+                <% products.forEach(product => { %>
+                    <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl hover:-translate-y-2 transition-all flex flex-col">
+                        <img src="<%= product.image %>" class="w-full h-56 object-cover" alt="<%= product.name %>">
+                        <div class="p-5 flex-grow flex flex-col">
+                            <h3 class="text-xl font-bold mb-2"><%= product.name %></h3>
+                            <p class="text-brandEnd font-bold text-xl mb-3">₹<%= product.price %></p>
+                            <p class="text-gray-600 text-sm mb-5 leading-relaxed"><%= product.description %></p>
+                            
+                            <button 
+                                class="mt-auto w-full bg-gradient-to-r from-brandStart to-brandEnd text-white py-3 rounded-md font-bold hover:opacity-90" 
+                                onclick="addToOrder('<%= product._id %>', '<%= product.name %>', '<%= product.price %>')">
+                                Add to Order
+                            </button>
+                        </div>
+                    </div>
+                <% }) %>
+            <% } else { %>
+                <p class="col-span-full text-center text-gray-500">No products are available at the moment.</p>
+            <% } %>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white text-center py-10 mt-16">
+        <p>&copy; 2026 Cafe Food. All rights reserved.</p>
+    </footer>
+
+    <script>
+        let cartItems = JSON.parse(localStorage.getItem('cafe_cart')) || [];
+
+        function addToOrder(productId, productName, productPrice) {
+            const idStr = String(productId);
+            const existingItem = cartItems.find(item => String(item.id) === idStr);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cartItems.push({ 
+                    id: idStr, 
+                    name: productName, 
+                    price: Number(productPrice), 
+                    quantity: 1 
+                });
+            }
+            saveAndUpdate();
+            showMessage(productName + ' added to cart!', 'success');
+        }
+
+        function changeQty(productId, delta) {
+            const item = cartItems.find(item => String(item.id) === String(productId));
+            if (item) {
+                if (delta === -1 && item.quantity <= 1) return; 
+                item.quantity += delta;
+                saveAndUpdate();
+            }
+        }
+
+        function removeFromCart(productId) {
+            cartItems = cartItems.filter(item => String(item.id) !== String(productId));
+            saveAndUpdate();
+        }
+
+        function saveAndUpdate() {
+            localStorage.setItem('cafe_cart', JSON.stringify(cartItems));
+            updateCartUI();
+        }
+
+        function toggleCart() {
+            const sidebar = document.getElementById('cartSidebar');
+            sidebar.classList.toggle('right-0');
+            sidebar.classList.toggle('-right-[450px]');
+        }
+
+        function updateCartUI() {
+            const display = document.getElementById('cart-items-display');
+            const totalSpan = document.getElementById('cart-total');
+            const cartCount = document.getElementById('cart-count');
+            
+            let total = 0;
+            let totalQty = 0;
+
+            if (cartItems.length === 0) {
+                display.innerHTML = '<p class="text-center mt-10 text-gray-400">Cart is empty</p>';
+            } else {
+                let tableHTML = `
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="text-left border-b-2 border-gray-100">
+                                <th class="py-2 text-brandEnd w-[40%]">Item</th>
+                                <th class="py-2 text-brandEnd text-center w-[25%]">Qty</th>
+                                <th class="py-2 text-brandEnd text-right w-[25%]">Total</th>
+                                <th class="w-[10%]"></th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-50">
+                `;
+
+                cartItems.forEach((item) => {
+                    const subtotal = item.price * item.quantity;
+                    total += subtotal;
+                    totalQty += item.quantity;
+
+                    tableHTML += `
+                        <tr>
+                            <td class="py-4">
+                                <strong class="block">${item.name}</strong>
+                                <span class="text-gray-500 text-xs">₹${item.price}</span>
+                            </td>
+                            <td class="py-4">
+                                <div class="flex items-center justify-center gap-2">
+                                    <button class="w-6 h-6 bg-gray-100 rounded hover:bg-gray-200" onclick="changeQty('${item.id}', -1)">-</button>
+                                    <span class="font-semibold">${item.quantity}</span>
+                                    <button class="w-6 h-6 bg-gray-100 rounded hover:bg-gray-200" onclick="changeQty('${item.id}', 1)">+</button>
+                                </div>
+                            </td>
+                            <td class="py-4 text-right font-bold">₹${subtotal}</td>
+                            <td class="py-4 text-right">
+                                <button class="text-red-500 text-xl font-bold" onclick="removeFromCart('${item.id}')">&times;</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                tableHTML += `</tbody></table>`;
+                display.innerHTML = tableHTML;
+            }
+            
+            cartCount.textContent = totalQty;
+            totalSpan.textContent = total;
+        }
+
+        function showMessage(msg, type) {
+            const msgDiv = document.getElementById('message');
+            msgDiv.textContent = msg;
+            msgDiv.classList.remove('hidden', 'bg-green-500', 'bg-blue-500');
+            const colorClass = type === 'success' ? 'bg-green-500' : 'bg-blue-500';
+            msgDiv.classList.add('block', colorClass);
+            setTimeout(() => { 
+                msgDiv.classList.add('hidden');
+                msgDiv.classList.remove('block');
+            }, 2000);
+        }
+
+        async function checkout() {
+            if (cartItems.length === 0) {
+                showMessage('Your cart is empty!', 'info');
+                return;
+            }
+
+            // FIX 2: Added <%= %> and proper ternary syntax
+            const isLoggedIn = <%= (typeof user !== 'undefined' && user) ? 'true' : 'false' %>;
+
+            if (!isLoggedIn) {
+                alert('Please login to place your order.');
+                window.location.href = '/login';
+                return;
+            }
+
+            const orderData = {
+                items: cartItems,
+                total: cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+            };
+
+            try {
+                const response = await fetch('/place-order', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(orderData)
+                });
+                const result = await response.json();
+                if (result.success) {
+                    alert('🎉 Order placed! ID: #' + (result.orderId || '101'));
+                    cartItems = [];
+                    saveAndUpdate();
+                    toggleCart();
+                } else {
+                    alert('Checkout failed: ' + (result.message || 'Error'));
+                }
+            } catch (err) {
+                alert('Connection error. Order saved locally but not sent to server.');
+            }
+        }
+
+        updateCartUI();
+    </script>
+</body>
+</html>

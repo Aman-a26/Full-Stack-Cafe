@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cafe Food - Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-[#667eea] to-[#764ba2] min-h-screen flex justify-center items-center font-sans p-4">
+
+    <div class="bg-white p-10 rounded-xl shadow-2xl w-full max-w-[400px]">
+        <div class="text-center mb-8">
+            <h1 class="text-[#333] text-3xl font-bold mb-2 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-9 h-9 mr-2">
+                    <path d="M10.5 1.875a.75.75 0 0 0-1.5 0v8.25c0 .414.336.75.75.75h6.375a3.75 3.75 0 0 1 0 7.5H5.25a.75.75 0 0 0 0 1.5h9.375a5.25 5.25 0 0 0 0-10.5H10.5V1.875Z" />
+                </svg>
+                <span>Cafe Food</span>
+            </h1>
+            <p class="text-gray-500 text-sm">Welcome Back</p>
+        </div>
+
+        <% if (error) { %>
+            <div class="bg-red-100 border border-red-200 text-red-800 p-3 rounded-md mb-5 text-sm">
+                <%= error %>
+            </div>
+        <% } %>
+
+        <form method="POST" action="/login" class="space-y-5">
+            <div>
+                <label for="userType" class="block mb-1 text-gray-800 font-medium">Login as:</label>
+                <select name="userType" id="userType" required 
+                        class="w-full p-3 border border-gray-300 rounded-md text-sm outline-none focus:border-[#667eea] focus:ring-2 focus:ring-[#667eea]/20 transition-all bg-white">
+                    <option value="user">User</option>
+                    <option value="admin">Admin</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="email" class="block mb-1 text-gray-800 font-medium">Email Address</label>
+                <input type="email" id="email" name="email" required placeholder="your@email.com"
+                       class="w-full p-3 border border-gray-300 rounded-md text-sm outline-none focus:border-[#667eea] focus:ring-2 focus:ring-[#667eea]/20 transition-all">
+            </div>
+
+            <div>
+                <label for="password" class="block mb-1 text-gray-800 font-medium">Password</label>
+                <input type="password" id="password" name="password" required placeholder="Enter your password"
+                       class="w-full p-3 border border-gray-300 rounded-md text-sm outline-none focus:border-[#667eea] focus:ring-2 focus:ring-[#667eea]/20 transition-all">
+            </div>
+
+            <button type="submit" 
+                    class="w-full p-3 bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white rounded-md font-semibold text-lg hover:-translate-y-0.5 transition-transform active:translate-y-0 shadow-md">
+                Login
+            </button>
+        </form>
+
+        <div class="text-center mt-5 text-gray-500 text-sm">
+            Don't have an account? <a href="/signup" class="text-[#667eea] font-bold hover:underline">Sign Up</a>
+        </div>
+
+        <div class="mt-8 pt-5 border-t border-gray-100 text-center text-[11px] text-gray-400">
+            <p class="font-bold uppercase tracking-wider mb-1">Demo Credentials:</p>
+            <p>User: user1@cafe.com / password123</p>
+            <p>Admin: admin@cafe.com / admin123</p>
+        </div>
+    </div>
+
+</body>
+</html>

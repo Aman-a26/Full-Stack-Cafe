@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cafe Food - Products</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes slideIn { from { transform: translateX(400px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .animate-slideIn { animation: slideIn 0.3s ease-in; }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans text-gray-800">
+    
+    <div id="message" class="fixed top-5 right-5 px-6 py-4 rounded shadow-lg text-white font-semibold z-[1000] hidden animate-slideIn"></div>
+
+    <nav class="bg-gradient-to-r from-[#667eea] to-[#764ba2] px-8 py-4 text-white flex justify-between items-center shadow-md sticky top-0 z-[500]">
+        <h1 class="text-2xl font-bold">☕ Cafe Food</h1>
+        <div class="flex gap-5 items-center">
+            <a href="/" class="hover:opacity-80 transition-opacity">Home</a>
+            <a href="/products" class="font-bold border-b-2 border-white pb-1">Products</a>
+            <% if (user) { %>
+                <a href="/user-dashboard" class="hover:opacity-80 transition-opacity">Dashboard</a>
+                <a href="/cart" class="flex items-center gap-1 hover:opacity-80 transition-opacity">🛒 Cart</a>
+                <a href="/logout" class="bg-red-500 px-4 py-1.5 rounded-md text-sm hover:bg-red-600 transition-colors">Logout</a>
+            <% } else { %>
+                <a href="/login" class="hover:opacity-80 transition-opacity">Login</a>
+                <a href="/signup" class="hover:opacity-80 transition-opacity">Sign Up</a>
+            <% } %>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-5 py-12">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-bold text-gray-900 mb-2">Our Menu</h2>
+            <p class="text-gray-600">Discover our delicious cafe menu</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            <% products.forEach(product => { %>
+                <div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all flex flex-col group">
+                    <div class="relative h-52 overflow-hidden bg-gradient-to-br from-[#667eea] to-[#764ba2]">
+                        <img src="<%= product.image %>" alt="<%= product.name %>" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                    </div>
+
+                    <div class="p-6 flex-grow flex flex-col">
+                        <span class="text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-1"><%= product.category %></span>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2"><%= product.name %></h3>
+                        <p class="text-gray-500 text-sm mb-4 line-clamp-2 min-h-[40px] leading-relaxed">
+                            <%= product.description %>
+                        </p>
+                        
+                        <div class="mt-auto">
+                            <div class="text-2xl font-bold text-[#667eea] mb-4">₹<%= product.price %></div>
+                            
+                            <div class="flex items-center gap-3 mb-4">
+                                <label for="qty-<%= product.id %>" class="text-xs text-gray-500 font-semibold">QTY:</label>
+                                <input type="number" id="qty-<%= product.id %>" min="1" value="1" 
+                                       class="w-16 border border-gray-200 rounded p-1 text-center text-sm focus:border-[#667eea] focus:ring-1 focus:ring-[#667eea] outline-none transition-all">
+                            </div>
+                            
+                            <button class="w-full bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white py-3 rounded-lg font-bold hover:opacity-90 active:scale-95 transition-all shadow-md"
+                                    data-product-id="<%= product.id %>" 
+                                    onclick="addToCart(this.dataset.productId)">
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+    </div>
+
+    <script>
+        function addToCart(productId) {
+            const quantityInput = document.getElementById(`qty-${productId}`);
+            const quantity = quantityInput.value;
+            
+            fetch('/add-to-cart', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ productId, quantity })
+            })
+            .then(res => res.json())
+            .then(data => {
+                showMessage(data.message, data.success ? 'success' : 'error');
+                if (data.success) {
+                    quantityInput.value = 1;
+                }
+            })
+            .catch(err => showMessage('Error adding to cart', 'error'));
+        }
+
+        function showMessage(msg, type) {
+            const msgDiv = document.getElementById('message');
+            msgDiv.textContent = msg;
+            
+            // Reset classes
+            msgDiv.className = 'fixed top-5 right-5 px-6 py-4 rounded shadow-lg text-white font-semibold z-[1000] animate-slideIn block';
+            
+            if (type === 'success') {
+                msgDiv.classList.add('bg-green-500');
+            } else {
+                msgDiv.classList.add('bg-red-500');
+            }
+            
+            setTimeout(() => {
+                msgDiv.classList.add('hidden');
+                msgDiv.classList.remove('block');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
