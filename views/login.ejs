@@ -11,7 +11,7 @@
     <div class="bg-white p-10 rounded-xl shadow-2xl w-full max-w-[400px]">
         <div class="text-center mb-8">
             <h1 class="text-[#333] text-3xl font-bold mb-2 flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-9 h-9 mr-2">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-9 h-9 mr-2 text-[#667eea]">
                     <path d="M10.5 1.875a.75.75 0 0 0-1.5 0v8.25c0 .414.336.75.75.75h6.375a3.75 3.75 0 0 1 0 7.5H5.25a.75.75 0 0 0 0 1.5h9.375a5.25 5.25 0 0 0 0-10.5H10.5V1.875Z" />
                 </svg>
                 <span>Cafe Food</span>
@@ -20,7 +20,7 @@
         </div>
 
         <% if (error) { %>
-            <div class="bg-red-100 border border-red-200 text-red-800 p-3 rounded-md mb-5 text-sm">
+            <div class="bg-red-100 border border-red-200 text-red-800 p-3 rounded-md mb-5 text-sm text-center font-medium">
                 <%= error %>
             </div>
         <% } %>
@@ -30,7 +30,7 @@
                 <label for="userType" class="block mb-1 text-gray-800 font-medium">Login as:</label>
                 <select name="userType" id="userType" required 
                         class="w-full p-3 border border-gray-300 rounded-md text-sm outline-none focus:border-[#667eea] focus:ring-2 focus:ring-[#667eea]/20 transition-all bg-white">
-                    <option value="user">User</option>
+                    <option value="student">Student</option> 
                     <option value="admin">Admin</option>
                 </select>
             </div>
@@ -58,9 +58,9 @@
         </div>
 
         <div class="mt-8 pt-5 border-t border-gray-100 text-center text-[11px] text-gray-400">
-            <p class="font-bold uppercase tracking-wider mb-1">Demo Credentials:</p>
-            <p>User: user1@cafe.com / password123</p>
-            <p>Admin: admin@cafe.com / admin123</p>
+            <p class="font-bold uppercase tracking-wider mb-1">Testing Tip:</p>
+            <p>Ensure you sign up as a new student first,</p>
+            <p>then login using the "Student" option.</p>
         </div>
     </div>
 

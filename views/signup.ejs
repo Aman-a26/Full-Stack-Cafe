@@ -11,7 +11,7 @@
     <div class="bg-white p-10 rounded-xl shadow-2xl w-full max-w-[450px]">
         <div class="text-center mb-8">
             <h1 class="text-[#333] text-3xl font-bold mb-2 flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-9 h-9 mr-2">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-9 h-9 mr-2 text-[#f5576c]">
                     <path d="M10.5 1.875a.75.75 0 0 0-1.5 0v8.25c0 .414.336.75.75.75h6.375a3.75 3.75 0 0 1 0 7.5H5.25a.75.75 0 0 0 0 1.5h9.375a5.25 5.25 0 0 0 0-10.5H10.5V1.875Z" />
                 </svg>
                 <span>Cafe Food</span>
@@ -20,12 +20,12 @@
         </div>
 
         <% if (error) { %>
-            <div class="bg-red-100 border border-red-200 text-red-800 p-3 rounded-md mb-5 text-sm">
+            <div class="bg-red-100 border border-red-200 text-red-800 p-3 rounded-md mb-5 text-sm text-center">
                 <%= error %>
             </div>
         <% } %>
 
-        <form method="POST" action="/signup" class="space-y-5">
+        <form id="signupForm" method="POST" action="/signup" class="space-y-5">
             <div>
                 <label for="username" class="block mb-1 text-gray-800 font-medium">Full Name</label>
                 <input type="text" id="username" name="username" required placeholder="John Doe"
@@ -46,7 +46,7 @@
 
             <div>
                 <label for="password" class="block mb-1 text-gray-800 font-medium">Password</label>
-                <input type="password" id="password" name="password" required placeholder="At least 6 characters"
+                <input type="password" id="password" name="password" required minlength="6" placeholder="At least 6 characters"
                        class="w-full p-3 border border-gray-300 rounded-md text-sm outline-none focus:border-[#f5576c] focus:ring-2 focus:ring-[#f5576c]/20 transition-all">
             </div>
 
@@ -55,6 +55,8 @@
                 <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="Re-enter password"
                        class="w-full p-3 border border-gray-300 rounded-md text-sm outline-none focus:border-[#f5576c] focus:ring-2 focus:ring-[#f5576c]/20 transition-all">
             </div>
+
+            <input type="hidden" name="role" value="student">
 
             <button type="submit" 
                     class="w-full p-3 bg-gradient-to-r from-[#f093fb] to-[#f5576c] text-white rounded-md font-semibold text-lg hover:-translate-y-0.5 transition-transform active:translate-y-0 shadow-md">
@@ -67,5 +69,17 @@
         </div>
     </div>
 
+    <script>
+        // Simple frontend check to ensure passwords match
+        const form = document.getElementById('signupForm');
+        form.addEventListener('submit', (e) => {
+            const pass = document.getElementById('password').value;
+            const confirm = document.getElementById('confirmPassword').value;
+            if (pass !== confirm) {
+                e.preventDefault();
+                alert("Passwords do not match!");
+            }
+        });
+    </script>
 </body>
 </html>

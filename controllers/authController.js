@@ -1,15 +1,20 @@
-const User = require('../models/User');
+const User = require('../models/user');
 const bcrypt = require('bcryptjs');
 
 // 1. Render Pages
 exports.getLogin = (req, res) => res.render('login', { error: null });
 exports.getSignup = (req, res) => res.render('signup', { error: null });
 
-// 2. Login Logic: Optimized for Guest-to-User Flow
+// 2. Login Logic
 exports.postLogin = async (req, res) => {
     try {
-        const { email, password, userType } = req.body;
-        const user = await User.findOne({ email, role: userType });
+        let { email, password, userType } = req.body;
+
+        // Normalize email: trim spaces and make lowercase
+        const cleanEmail = email.trim().toLowerCase();
+
+        // Find user by normalized email AND the specific role
+        const user = await User.findOne({ email: cleanEmail, role: userType });
 
         if (user && await bcrypt.compare(password, user.password)) {
             // --- SESSION STORAGE ---
@@ -17,19 +22,21 @@ exports.postLogin = async (req, res) => {
             req.session.userId = user._id;
             req.session.userType = user.role;
 
-            // Save session before redirecting to ensure data is written to DB
             return req.session.save(() => {
-                // If they have items in their cart, send them back to the cart to checkout
+                // If they have items in their cart, send them back to the cart
                 if (req.session.cart && req.session.cart.length > 0 && user.role === 'student') {
                     return res.redirect('/cart');
                 }
                 
-                // Otherwise, send to their respective dashboard
+                // Redirect based on role
                 res.redirect(user.role === 'admin' ? '/admin-dashboard' : '/user-dashboard');
             });
         }
-        res.render('login', { error: 'Invalid Email or Password' });
+        
+        // If it fails, we show exactly which field was likely the issue
+        res.render('login', { error: 'Invalid Email, Password, or Role' });
     } catch (err) {
+        console.error("Login Error:", err);
         res.render('login', { error: 'Login failed. Please try again.' });
     }
 };
@@ -37,36 +44,57 @@ exports.postLogin = async (req, res) => {
 // 3. Signup Logic
 exports.postSignup = async (req, res) => {
     try {
-        const { username, email, password } = req.body;
+        const { username, email, collegeId, password, confirmPassword } = req.body;
+
+        // Validation 1: Check if any fields are blank
+        if (!username || !email || !collegeId || !password || !confirmPassword) {
+            return res.render('signup', { error: 'All fields are required!' });
+        }
+
+        // Validation 2: Check if passwords match
+        if (password !== confirmPassword) {
+            return res.render('signup', { error: 'Passwords do not match!' });
+        }
+
+        // Validation 3: Password length check
+        if (password.length < 6) {
+            return res.render('signup', { error: 'Password must be at least 6 characters long.' });
+        }
+
+        // Normalize email for storage
+        const cleanEmail = email.trim().toLowerCase();
+
+        // Validation 4: Check if email is already registered
+        const existingUser = await User.findOne({ email: cleanEmail });
+        if (existingUser) {
+            return res.render('signup', { error: 'Email is already registered! Please log in.' });
+        }
+
         const hashed = await bcrypt.hash(password, 10);
         
         await User.create({ 
-            username, 
-            email, 
+            username: username.trim(), 
+            email: cleanEmail, 
+            collegeId: collegeId.trim(), 
             password: hashed, 
-            role: 'student' // Default role
+            role: 'student' 
         });
         
         res.redirect('/login');
     } catch (err) {
-        res.render('signup', { error: 'Registration failed. Email might already exist.' });
+        console.error("Signup DB Error:", err);
+        res.render('signup', { error: 'Registration failed. Please try again.' });
     }
 };
 
-// 4. Logout Logic: THE FIX
+// 4. Logout Logic
 exports.logout = (req, res) => {
-    // 1. Destroy the session on the server
     req.session.destroy((err) => {
         if (err) {
             console.error("Logout Error:", err);
             return res.redirect('/user-dashboard');
         }
-
-        // 2. Clear the browser cookie (connect.sid is the default)
         res.clearCookie('connect.sid');
-
-        // 3. Redirect to login
-        // Because of the Cache-Control in app.js, the user is now 100% logged out
         res.redirect('/login');
     });
 };

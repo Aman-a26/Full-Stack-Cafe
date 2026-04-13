@@ -1,14 +1,17 @@
 require('dotenv').config();
 const express = require('express');
+const morgan = require('morgan');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const path = require('path');
 const app = express();
 
-// --- 1. Database Connection ---
 mongoose.connect(process.env.MONGODB_URI)
     .then(() => console.log("✅ MongoDB Connected Successfully"))
     .catch(err => console.error("❌ MongoDB Connection Error:", err));
+
+// --- HTTP Request Logging ---
+app.use(morgan('dev'));
 
 // --- 2. View Engine & Static Files ---
 app.set('view engine', 'ejs');
@@ -20,15 +23,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 // --- 4. Session Configuration ---
-app.use(session({ 
-    secret: process.env.SESSION_SECRET || 'cafe_secret_key_789', 
-    resave: false, 
-    // We set this to false so we don't create empty sessions for bots
-    saveUninitialized: false, 
-    cookie: { 
-        maxAge: 1000 * 60 * 60 * 24, // Session stays alive for 24 hours
-        httpOnly: true 
-    }
+app.use(session({
+    secret: 'your_secret_key',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false } // Set to true if using HTTPS
 }));
 
 // --- 5. FIX: Prevent Browser Caching (Logout Security) ---
@@ -65,6 +64,21 @@ app.get('/', (req, res) => {
     // Instead of forcing login, we send everyone to the menu first.
     res.redirect('/user-dashboard');
 });
+
+exports.addToCart = async (req, res) => {
+    try {
+        const product = await Product.findById(req.body.productId);
+        
+        // Block if not active OR no stock
+        if (!product || !product.isActive || product.stock <= 0) {
+            return res.json({ success: false, message: 'This item is currently unavailable.' });
+        }
+
+        // ... existing cart logic ...
+    } catch (err) {
+        res.json({ success: false });
+    }
+};
 
 // --- 9. Server Start ---
 const PORT = process.env.PORT || 3001;

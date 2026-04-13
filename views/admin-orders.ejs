@@ -6,7 +6,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-50">
-    <nav class="bg-green-600 p-4 text-white flex justify-between items-center shadow-lg">
+    <nav class="bg-green-600 p-4 text-white flex justify-between items-center shadow-lg sticky top-0 z-50">
         <h1 class="text-xl font-bold">Cafe Admin: Orders</h1>
         <div class="space-x-4">
             <a href="/admin-dashboard" class="hover:underline font-bold">Manage Menu 🍔</a>
@@ -21,30 +21,48 @@
             </h2>
             <div class="grid gap-4">
                 <% liveOrders.forEach(order => { %>
-                    <div class="bg-white p-4 rounded-lg shadow-sm border-l-4 border-orange-500 flex justify-between items-center">
+                    <div class="bg-white p-5 rounded-xl shadow-sm border-l-8 border-orange-500 flex justify-between items-center hover:shadow-md transition">
                         <div>
-                            <p class="text-xs text-gray-400">Order #<%= order._id.toString().slice(-6) %></p>
-                            <h4 class="font-bold text-lg"><%= order.user ? order.user.username : 'Guest' %></h4>
-                            <p class="text-sm text-gray-600">
-                                <% order.items.forEach(item => { %> <%= item.name %> (x<%= item.quantity %>) <% }) %>
+                            <div class="flex items-center gap-2 mb-1">
+                                <p class="text-xs font-bold text-gray-400 uppercase tracking-tighter">Order #<%= order._id.toString().slice(-6) %></p>
+                                <span class="text-[10px] bg-gray-100 px-2 py-0.5 rounded text-gray-500">
+                                    <%= new Date(order.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) %>
+                                </span>
+                            </div>
+                            <h4 class="font-bold text-lg text-gray-800"><%= order.user ? order.user.username : 'Guest Student' %></h4>
+                            <p class="text-sm text-gray-600 font-medium">
+                                <% order.items.forEach((item, index) => { %> 
+                                    <span class="bg-orange-50 text-orange-700 px-1.5 py-0.5 rounded text-xs border border-orange-100">
+                                        <%= item.name %> x<%= item.quantity %>
+                                    </span>
+                                    <%= index < order.items.length - 1 ? ' ' : '' %> 
+                                <% }) %>
                             </p>
                         </div>
-                        <div class="text-right space-y-2">
-                            <p class="font-black text-xl">$<%= order.totalAmount %></p>
-                            <form action="/admin/update-order-status" method="POST">
+                        
+                        <div class="text-right space-y-3">
+                            <p class="font-black text-2xl text-gray-900">₹<%= order.totalAmount %></p>
+                            
+                            <form action="/update-order-status" method="POST">
                                 <input type="hidden" name="orderId" value="<%= order._id %>">
-                                <select name="status" onchange="this.form.submit()" class="border rounded p-1 text-sm bg-orange-50 font-bold text-orange-700">
-                                    <option value="Pending" <%= order.status === 'Pending' ? 'selected' : '' %>>Pending</option>
-                                    <option value="Processing" <%= order.status === 'Processing' ? 'selected' : '' %>>Processing</option>
-                                    <option value="Shipped" <%= order.status === 'Shipped' ? 'selected' : '' %>>Shipped</option>
-                                    <option value="Delivered" <%= order.status === 'Delivered' ? 'selected' : '' %>>Mark as Done (Delivered)</option>
-                                    <option value="Cancelled" <%= order.status === 'Cancelled' ? 'selected' : '' %>>Cancel Order</option>
+                                <select name="status" onchange="this.form.submit()" 
+                                    class="border-2 border-orange-200 rounded-lg p-2 text-sm bg-orange-50 font-bold text-orange-700 focus:outline-none focus:border-orange-500 cursor-pointer">
+                                    <option value="Pending" <%= order.status === 'Pending' ? 'selected' : '' %>>⌛ Pending</option>
+                                    <option value="Processing" <%= order.status === 'Processing' ? 'selected' : '' %>>👨‍🍳 Processing</option>
+                                    <option value="Shipped" <%= order.status === 'Shipped' ? 'selected' : '' %>>🚚 Out for Delivery</option>
+                                    <option value="Delivered" <%= order.status === 'Delivered' ? 'selected' : '' %>>✅ Mark as Done</option>
+                                    <option value="Cancelled" <%= order.status === 'Cancelled' ? 'selected' : '' %>>❌ Cancel Order</option>
                                 </select>
                             </form>
                         </div>
                     </div>
                 <% }) %>
-                <% if(liveOrders.length === 0) { %><p class="text-gray-400 italic">No live orders right now.</p><% } %>
+                
+                <% if(liveOrders.length === 0) { %>
+                    <div class="bg-white border-2 border-dashed border-gray-200 rounded-xl py-10 text-center">
+                        <p class="text-gray-400 font-medium italic">No live orders right now. Relax! ☕</p>
+                    </div>
+                <% } %>
             </div>
         </section>
 
@@ -52,22 +70,33 @@
             <h2 class="text-2xl font-black text-gray-400 mb-4 flex items-center">
                 <span class="mr-2">✅</span> COMPLETED ORDERS
             </h2>
-            <div class="bg-white rounded-xl shadow-inner overflow-hidden">
-                <table class="w-full text-left">
-                    <thead class="bg-gray-100 text-gray-500 text-sm">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-gray-50 text-gray-500 text-xs uppercase tracking-widest">
                         <tr>
-                            <th class="p-4">Customer</th>
+                            <th class="p-4">Time</th>
+                            <th>Customer</th>
+                            <th>Items</th>
                             <th>Total</th>
-                            <th>Status</th>
+                            <th class="p-4 text-center">Status</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="text-sm">
                         <% doneOrders.forEach(order => { %>
-                            <tr class="border-b opacity-60">
-                                <td class="p-4 font-medium"><%= order.user ? order.user.username : 'Guest' %></td>
-                                <td class="font-bold">$<%= order.totalAmount %></td>
-                                <td>
-                                    <span class="<%= order.status === 'Delivered' ? 'text-green-600' : 'text-red-500' %> font-bold uppercase text-xs">
+                            <tr class="border-b border-gray-50 hover:bg-gray-50/50 transition">
+                                <td class="p-4 text-gray-400">
+                                    <%= new Date(order.createdAt).toLocaleDateString() %>
+                                </td>
+                                <td class="font-bold text-gray-700">
+                                    <%= order.user ? order.user.username : 'Guest' %>
+                                </td>
+                                <td class="text-gray-500 italic truncate max-w-xs">
+                                    <% order.items.forEach(item => { %> <%= item.name %> (<%= item.quantity %>) <% }) %>
+                                </td>
+                                <td class="font-black text-gray-800">₹<%= order.totalAmount %></td>
+                                <td class="p-4 text-center">
+                                    <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter
+                                        <%= order.status === 'Delivered' ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-500' %>">
                                         <%= order.status %>
                                     </span>
                                 </td>
@@ -75,6 +104,9 @@
                         <% }) %>
                     </tbody>
                 </table>
+                <% if(doneOrders.length === 0) { %>
+                    <div class="p-8 text-center text-gray-400">No completed history available.</div>
+                <% } %>
             </div>
         </section>
     </main>
