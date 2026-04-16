@@ -24,7 +24,7 @@ app.use(express.json());
 
 // --- 4. Session Configuration ---
 app.use(session({
-    secret: 'your_secret_key',
+    secret: process.env.SESSION_SECRET || 'a_very_secure_fallback_secret',
     resave: false,
     saveUninitialized: false,
     cookie: { secure: false } // Set to true if using HTTPS
@@ -64,21 +64,6 @@ app.get('/', (req, res) => {
     // Instead of forcing login, we send everyone to the menu first.
     res.redirect('/user-dashboard');
 });
-
-exports.addToCart = async (req, res) => {
-    try {
-        const product = await Product.findById(req.body.productId);
-        
-        // Block if not active OR no stock
-        if (!product || !product.isActive || product.stock <= 0) {
-            return res.json({ success: false, message: 'This item is currently unavailable.' });
-        }
-
-        // ... existing cart logic ...
-    } catch (err) {
-        res.json({ success: false });
-    }
-};
 
 // --- 9. Server Start ---
 const PORT = process.env.PORT || 3001;
