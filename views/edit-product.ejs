@@ -3,25 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Product - Cafe Admin</title>
+    <title>Edit Delight | Cafe Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #fafaf9; }
+        .font-serif { font-family: 'Playfair Display', serif; }
+    </style>
 </head>
-<body class="bg-gray-100 font-sans m-0 flex justify-center items-center min-h-screen">
+<body class="min-h-screen flex items-center justify-center p-6">
 
-    <div class="edit-card bg-white p-10 rounded-xl shadow-2xl w-full max-w-[500px]">
-        <h2 class="text-2xl font-bold mb-5 text-gray-800 border-b-2 border-indigo-500 pb-2">Edit Product #<%= product.id %></h2>
+    <div class="bg-white rounded-[3rem] shadow-2xl p-10 md:p-14 w-full max-w-2xl border border-stone-100">
+        <div class="flex justify-between items-start mb-12">
+            <div>
+                <h1 class="font-serif text-4xl mb-2">Edit <span class="italic text-amber-600">Delight</span></h1>
+                <p class="text-stone-400 text-sm">Modify the details for item #<%= product.id %></p>
+            </div>
+            <a href="/admin-dashboard" class="text-stone-300 hover:text-stone-900 transition-colors"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></a>
+        </div>
         
-        <form action="/edit-product/<%= product.id %>" method="POST" enctype="multipart/form-data">
-            <div class="form-group mb-4">
-                <label class="block mb-1 text-gray-600 font-semibold text-sm">Product Name</label>
+        <form action="/edit-product/<%= product.id %>" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="md:col-span-2">
+                <label class="block text-[10px] font-black uppercase tracking-[0.2em] text-stone-400 mb-2 ml-1">Product Name</label>
                 <input type="text" name="name" value="<%= product.name %>" required 
-                       class="w-full p-3 border border-gray-300 rounded-md text-base outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/10 transition-all">
+                       class="w-full bg-stone-50 border-none rounded-2xl px-6 py-4 focus:ring-2 focus:ring-amber-500 transition-all text-stone-700">
             </div>
 
-            <div class="form-group mb-4">
-                <label class="block mb-1 text-gray-600 font-semibold text-sm">Category</label>
+            <div>
+                <label class="block text-[10px] font-black uppercase tracking-[0.2em] text-stone-400 mb-2 ml-1">Category</label>
                 <select name="category" 
-                        class="w-full p-3 border border-gray-300 rounded-md text-base outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/10 transition-all bg-white">
+                        class="w-full bg-stone-50 border-none rounded-2xl px-6 py-4 focus:ring-2 focus:ring-amber-500 transition-all appearance-none cursor-pointer">
                     <option value="Coffee" <%= product.category === 'Coffee' ? 'selected' : '' %>>Coffee</option>
                     <option value="Snacks" <%= product.category === 'Snacks' ? 'selected' : '' %>>Snacks</option>
                     <option value="Desserts" <%= product.category === 'Desserts' ? 'selected' : '' %>>Desserts</option>
@@ -29,47 +40,50 @@
                 </select>
             </div>
 
-            <div class="form-group mb-4">
-                <label class="block mb-1 text-gray-600 font-semibold text-sm">Price (₹)</label>
+            <div>
+                <label class="block text-[10px] font-black uppercase tracking-[0.2em] text-stone-400 mb-2 ml-1">Price (₹)</label>
                 <input type="number" name="price" value="<%= product.price %>" step="0.01" required 
-                       class="w-full p-3 border border-gray-300 rounded-md text-base outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/10 transition-all">
+                       class="w-full bg-stone-50 border-none rounded-2xl px-6 py-4 focus:ring-2 focus:ring-amber-500 transition-all text-stone-700">
             </div>
 
-            <div class="form-group mb-4">
-                <label class="block mb-1 text-gray-600 font-semibold text-sm">Stock Count</label>
+            <div>
+                <label class="block text-[10px] font-black uppercase tracking-[0.2em] text-stone-400 mb-2 ml-1">Stock Count</label>
                 <input type="number" name="stock" value="<%= product.stock %>" required 
-                       class="w-full p-3 border border-gray-300 rounded-md text-base outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/10 transition-all">
+                       class="w-full bg-stone-50 border-none rounded-2xl px-6 py-4 focus:ring-2 focus:ring-amber-500 transition-all text-stone-700">
             </div>
 
-            <div class="form-group mb-4">
-                <label class="block mb-1 text-gray-600 font-semibold text-sm">Description</label>
+            <div class="md:col-span-2">
+                <label class="block text-[10px] font-black uppercase tracking-[0.2em] text-stone-400 mb-2 ml-1">Description</label>
                 <textarea name="description" rows="3" required
-                          class="w-full p-3 border border-gray-300 rounded-md text-base outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/10 transition-all"><%= product.description %></textarea>
+                          class="w-full bg-stone-50 border-none rounded-2xl px-6 py-4 focus:ring-2 focus:ring-amber-500 transition-all text-stone-700 resize-none"><%= product.description %></textarea>
             </div>
 
-            <div class="form-group mb-4">
-                <label class="block mb-1 text-gray-600 font-semibold text-sm">Current Image</label>
-                <% if (product.image) { %>
-                    <img src="<%= product.image %>" alt="<%= product.name %>" class="w-24 h-24 object-cover rounded-md mb-2 border border-gray-200">
-                <% } else { %>
-                    <p class="text-xs text-gray-400 mb-2">No image available.</p>
-                <% } %>
-                
-                <label class="block mb-1 text-gray-600 font-semibold text-sm">Upload New Image (Optional)</label>
-                <input type="file" name="image" accept="image/*"
-                       class="w-full file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 p-3 border border-gray-300 rounded-md text-base outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/10 transition-all">
+            <div class="md:col-span-2">
+                <label class="block text-[10px] font-black uppercase tracking-[0.2em] text-stone-400 mb-2 ml-1">Product Visual</label>
+                <div class="flex flex-col sm:flex-row gap-6 items-center">
+                    <% if (product.image) { %>
+                        <div class="w-32 h-32 rounded-3xl overflow-hidden border border-stone-200 shadow-inner">
+                            <img src="<%= product.image %>" alt="<%= product.name %>" class="w-full h-full object-cover">
+                        </div>
+                    <% } %>
+                    <div class="flex-grow w-full">
+                        <label class="relative cursor-pointer bg-stone-100 rounded-2xl px-6 py-4 border-2 border-dashed border-stone-200 hover:border-amber-400 transition-all block text-center">
+                            <span class="text-xs font-bold text-stone-500">Replace Current Image</span>
+                            <input type="file" name="image" accept="image/*" class="sr-only">
+                        </label>
+                    </div>
+                </div>
             </div>
 
-            <div class="btn-container flex gap-3 mt-6">
-                <button type="submit" class="btn-save flex-[2] bg-gradient-to-r from-indigo-500 to-purple-600 text-white p-3 rounded-md font-semibold hover:opacity-90 transition-opacity">
+            <div class="md:col-span-2 flex gap-4 mt-6">
+                <button type="submit" class="flex-[2] py-5 bg-stone-900 text-white rounded-[2rem] font-bold text-lg hover:bg-amber-800 transition-all shadow-xl shadow-stone-900/20 active:scale-95">
                     Save Changes
                 </button>
-                <a href="/admin-dashboard" class="btn-cancel flex-1 bg-gray-200 text-gray-700 no-underline text-center p-3 rounded-md font-semibold hover:bg-gray-300 transition-colors">
+                <a href="/admin-dashboard" class="flex-1 py-5 bg-stone-100 text-stone-500 text-center rounded-[2rem] font-bold text-lg hover:bg-stone-200 transition-all active:scale-95">
                     Cancel
                 </a>
             </div>
         </form>
     </div>
-
 </body>
 </html>

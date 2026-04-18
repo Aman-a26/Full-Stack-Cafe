@@ -16,9 +16,12 @@ const adminController = require('../controllers/adminController');
 
 // --- PRODUCT MANAGEMENT ROUTES ---
 router.get('/admin-dashboard', adminController.getDashboard);
+router.get('/add-product', adminController.getAddProduct);
 router.post('/add-product', upload.single('image'), adminController.addProduct);
-router.get('/delete-product/:id', adminController.deleteProduct); // Changed to GET to match your <a> tag link
-router.post('/toggle-product/:id', adminController.toggleProductStatus);
+router.get('/delete-product/:id', adminController.deleteProduct);
+router.get('/toggle-status/:id', adminController.toggleProductStatus);
+router.get('/edit-product/:id', adminController.getEditProduct);
+router.post('/edit-product/:id', upload.single('image'), adminController.postEditProduct);
 
 // --- ORDER MANAGEMENT ROUTES ---
 router.get('/admin-orders', adminController.getOrders);

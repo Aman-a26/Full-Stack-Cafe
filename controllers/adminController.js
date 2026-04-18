@@ -124,3 +124,44 @@ exports.toggleProductStatus = async (req, res) => {
         res.redirect('/admin-dashboard');
     }
 };
+
+// 7. Render Add Product Page
+exports.getAddProduct = (req, res) => {
+    res.render('add-product', { user: req.session.user });
+};
+
+// 8. Render Edit Product Page
+exports.getEditProduct = async (req, res) => {
+    try {
+        const product = await Product.findById(req.params.id);
+        if (!product) return res.redirect('/admin-dashboard');
+        res.render('edit-product', { user: req.session.user, product });
+    } catch (err) {
+        console.error("Get Edit Product Error:", err);
+        res.redirect('/admin-dashboard');
+    }
+};
+
+// 9. Handle Edit Product Submission
+exports.postEditProduct = async (req, res) => {
+    try {
+        const { name, category, price, description, stock } = req.body;
+        const updateData = {
+            name: name.trim(),
+            category,
+            price: parseFloat(price),
+            description: description.trim(),
+            stock: parseInt(stock)
+        };
+
+        if (req.file) {
+            updateData.image = '/uploads/' + req.file.filename;
+        }
+
+        await Product.findByIdAndUpdate(req.params.id, updateData);
+        res.redirect('/admin-dashboard');
+    } catch (err) {
+        console.error("Post Edit Product Error:", err);
+        res.redirect('/admin-dashboard');
+    }
+};

@@ -3,80 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Product - Cafe Admin</title>
+    <title>Inventory Manager | Cafe Delight</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #fafaf9; }
+        .font-serif { font-family: 'Playfair Display', serif; }
+    </style>
 </head>
-<body class="bg-gray-100 font-sans flex justify-center items-center min-h-screen p-4">
+<body class="min-h-screen flex items-center justify-center p-6">
 
-    <div class="bg-white p-8 md:p-10 rounded-2xl shadow-xl w-full max-w-[550px] my-10">
-        <h2 class="text-2xl font-bold mb-6 text-gray-800 border-b-4 border-orange-500 pb-2 inline-block">Add New Product</h2>
+    <div class="bg-white rounded-[3rem] shadow-2xl p-10 md:p-14 w-full max-w-2xl border border-stone-100">
+        <div class="flex justify-between items-start mb-12">
+            <div>
+                <h1 class="font-serif text-4xl mb-2">New <span class="italic text-amber-600">Delight</span></h1>
+                <p class="text-stone-400 text-sm">Add a new item to the artisanal menu</p>
+            </div>
+            <a href="/admin-dashboard" class="text-stone-300 hover:text-stone-900 transition-colors"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></a>
+        </div>
         
-        <form action="/add-product" method="POST" enctype="multipart/form-data" class="space-y-5">
+        <form action="/add-product" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            
+            <div class="md:col-span-2">
+                <label class="block text-[10px] font-black uppercase tracking-[0.2em] text-stone-400 mb-2 ml-1">Product Name</label>
+                <input type="text" name="name" required placeholder="e.g. Signature Cold Brew"
+                       class="w-full bg-stone-50 border-none rounded-2xl px-6 py-4 focus:ring-2 focus:ring-amber-500 transition-all placeholder:text-stone-300">
+            </div>
+
+            <div>
+                <label class="block text-[10px] font-black uppercase tracking-[0.2em] text-stone-400 mb-2 ml-1">Category</label>
+                <select name="category" 
+                        class="w-full bg-stone-50 border-none rounded-2xl px-6 py-4 focus:ring-2 focus:ring-amber-500 transition-all appearance-none cursor-pointer">
+                    <option value="Coffee">Coffee</option>
+                    <option value="Snacks">Snacks</option>
+                    <option value="Desserts">Desserts</option>
+                    <option value="Beverages">Beverages</option>
+                </select>
+            </div>
             
             <div>
-                <label class="block mb-1 text-gray-600 font-bold text-sm">Product Name</label>
-                <input type="text" name="name" required placeholder="e.g. Classic Burger"
-                       class="w-full p-3 border border-gray-300 rounded-xl outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/10 transition-all">
-            </div>
-
-            <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <label class="block mb-1 text-gray-600 font-bold text-sm">Category</label>
-                    <select name="category" 
-                            class="w-full p-3 border border-gray-300 rounded-xl outline-none focus:border-orange-500 bg-white">
-                        <option value="Coffee">Coffee</option>
-                        <option value="Snacks">Snacks</option>
-                        <option value="Desserts">Desserts</option>
-                        <option value="Beverages">Beverages</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block mb-1 text-gray-600 font-bold text-sm">Price (₹)</label>
-                    <input type="number" name="price" step="0.01" required placeholder="0.00"
-                           class="w-full p-3 border border-gray-300 rounded-xl outline-none focus:border-orange-500">
-                </div>
+                <label class="block text-[10px] font-black uppercase tracking-[0.2em] text-stone-400 mb-2 ml-1">Price (₹)</label>
+                <input type="number" name="price" step="0.01" required placeholder="0.00"
+                       class="w-full bg-stone-50 border-none rounded-2xl px-6 py-4 focus:ring-2 focus:ring-amber-500 transition-all placeholder:text-stone-300">
             </div>
 
             <div>
-                <label class="block mb-1 text-gray-600 font-bold text-sm">Initial Stock Quantity</label>
+                <label class="block text-[10px] font-black uppercase tracking-[0.2em] text-stone-400 mb-2 ml-1">Initial Stock</label>
                 <input type="number" name="stock" required min="0" placeholder="e.g. 50"
-                       class="w-full p-3 border border-gray-300 rounded-xl outline-none focus:border-orange-500">
-                <p class="text-[10px] text-gray-400 mt-1 uppercase tracking-wider">Set to 0 to show "Out of Stock" immediately.</p>
+                       class="w-full bg-stone-50 border-none rounded-2xl px-6 py-4 focus:ring-2 focus:ring-amber-500 transition-all placeholder:text-stone-300">
             </div>
 
-            <div>
-                <label class="block mb-1 text-gray-600 font-bold text-sm">Description</label>
-                <textarea name="description" rows="2" required placeholder="Describe the taste, ingredients, etc..."
-                          class="w-full p-3 border border-gray-300 rounded-xl outline-none focus:border-orange-500"></textarea>
+            <div class="md:col-span-2">
+                <label class="block text-[10px] font-black uppercase tracking-[0.2em] text-stone-400 mb-2 ml-1">Description</label>
+                <textarea name="description" rows="3" required placeholder="Describe the experience..."
+                          class="w-full bg-stone-50 border-none rounded-2xl px-6 py-4 focus:ring-2 focus:ring-amber-500 transition-all placeholder:text-stone-300 resize-none"></textarea>
             </div>
 
-            <div>
-                <label class="block mb-1 text-gray-600 font-bold text-sm">Product Image</label>
-                <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-xl hover:border-orange-400 transition">
+            <div class="md:col-span-2">
+                <label class="block text-[10px] font-black uppercase tracking-[0.2em] text-stone-400 mb-2 ml-1">Product Visual</label>
+                <div class="mt-1 flex justify-center px-6 pt-8 pb-10 border-2 border-stone-200 border-dashed rounded-[2rem] hover:border-amber-400 transition bg-stone-50/50">
                     <div class="space-y-1 text-center">
-                        <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                        <svg class="mx-auto h-12 w-12 text-stone-300" stroke="currentColor" fill="none" viewBox="0 0 48 48">
                             <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                         </svg>
                         <div class="flex text-sm text-gray-600">
-                            <label for="file-upload" class="relative cursor-pointer bg-white rounded-md font-medium text-orange-600 hover:text-orange-500">
-                                <span>Upload a file</span>
+                            <label for="file-upload" class="relative cursor-pointer bg-white rounded-full px-4 py-1 shadow-sm font-bold text-amber-600 hover:text-amber-500 transition-colors">
+                                <span>Upload Image</span>
                                 <input id="file-upload" name="image" type="file" class="sr-only" accept="image/*" required onchange="previewImage(event)">
                             </label>
                         </div>
-                        <p class="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
                     </div>
                 </div>
-                <img id="output" class="mt-4 hidden w-full h-32 object-cover rounded-xl border border-gray-200">
+                <img id="output" class="mt-6 hidden w-full h-40 object-cover rounded-[2rem] border border-stone-200 shadow-inner">
             </div>
 
-            <div class="flex gap-3 pt-2">
-                <button type="submit" class="flex-[2] bg-orange-500 text-white p-3 rounded-xl font-bold hover:bg-orange-600 transition shadow-lg shadow-orange-100">
-                    Add Product
-                </button>
-                <a href="/admin-dashboard" class="flex-1 bg-gray-100 text-gray-500 text-center p-3 rounded-xl font-bold hover:bg-gray-200 transition">
-                    Cancel
-                </a>
-            </div>
+            <button type="submit" class="md:col-span-2 bg-stone-900 text-white py-5 rounded-[2rem] font-bold text-lg hover:bg-amber-800 transition-all shadow-xl shadow-stone-900/20 active:scale-95">
+                Finalize & Add to Menu
+            </button>
         </form>
     </div>
 

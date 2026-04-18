@@ -3,71 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cafe Food - Sign Up</title>
+    <title>Create Account | Cafe Delight</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background: radial-gradient(circle at bottom left, #fffbeb, #fafaf9); }
+        .font-serif { font-family: 'Playfair Display', serif; }
+    </style>
 </head>
-<body class="bg-gradient-to-br from-[#f093fb] to-[#f5576c] min-h-screen flex justify-center items-center font-sans p-5">
+<body class="min-h-screen flex flex-col items-center justify-center p-6">
+    <div class="mb-8 text-center">
+        <a href="/" class="text-3xl font-serif font-bold text-amber-900 tracking-tight flex items-center justify-center gap-2">
+            <span class="bg-amber-100 p-2 rounded-2xl text-amber-600 italic">C</span> Cafe Delight
+        </a>
+    </div>
 
-    <div class="bg-white p-10 rounded-xl shadow-2xl w-full max-w-[450px]">
+    <div class="bg-white/80 backdrop-blur-xl p-10 rounded-[2.5rem] shadow-2xl shadow-amber-900/10 w-full max-w-lg border border-white/50">
         <div class="text-center mb-8">
-            <h1 class="text-[#333] text-3xl font-bold mb-2 flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-9 h-9 mr-2 text-[#f5576c]">
-                    <path d="M10.5 1.875a.75.75 0 0 0-1.5 0v8.25c0 .414.336.75.75.75h6.375a3.75 3.75 0 0 1 0 7.5H5.25a.75.75 0 0 0 0 1.5h9.375a5.25 5.25 0 0 0 0-10.5H10.5V1.875Z" />
-                </svg>
-                <span>Cafe Food</span>
-            </h1>
-            <p class="text-gray-500 text-sm">Create Your Account</p>
+            <h2 class="font-serif text-3xl text-stone-900 mb-2">Join the Club</h2>
+            <p class="text-stone-400 text-sm">Create your student account for artisanal treats</p>
         </div>
 
         <% if (error) { %>
-            <div class="bg-red-100 border border-red-200 text-red-800 p-3 rounded-md mb-5 text-sm text-center">
-                <%= error %>
+            <div class="bg-red-50 text-red-600 p-4 rounded-2xl mb-6 text-xs font-semibold text-center border border-red-100">
+                <i class="fas fa-exclamation-circle mr-1"></i> <%= error %>
             </div>
         <% } %>
 
-        <form id="signupForm" method="POST" action="/signup" class="space-y-5">
-            <div>
-                <label for="username" class="block mb-1 text-gray-800 font-medium">Full Name</label>
+        <form id="signupForm" method="POST" action="/signup" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="md:col-span-2">
+                <label class="block text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-2 ml-1">Full Name</label>
                 <input type="text" id="username" name="username" required placeholder="John Doe"
-                       class="w-full p-3 border border-gray-300 rounded-md text-sm outline-none focus:border-[#f5576c] focus:ring-2 focus:ring-[#f5576c]/20 transition-all">
+                       class="w-full px-5 py-4 bg-stone-50 rounded-2xl border-none focus:ring-2 focus:ring-amber-500 transition-all text-stone-700">
             </div>
 
             <div>
-                <label for="email" class="block mb-1 text-gray-800 font-medium">Email Address</label>
-                <input type="email" id="email" name="email" required placeholder="your@email.com"
-                       class="w-full p-3 border border-gray-300 rounded-md text-sm outline-none focus:border-[#f5576c] focus:ring-2 focus:ring-[#f5576c]/20 transition-all">
+                <label class="block text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-2 ml-1">Email Address</label>
+                <input type="email" id="email" name="email" required placeholder="john@college.edu"
+                       class="w-full px-5 py-4 bg-stone-50 rounded-2xl border-none focus:ring-2 focus:ring-amber-500 transition-all text-stone-700">
             </div>
 
             <div>
-                <label for="collegeId" class="block mb-1 text-gray-800 font-medium">College ID</label>
-                <input type="text" id="collegeId" name="collegeId" required placeholder="Your college ID number"
-                       class="w-full p-3 border border-gray-300 rounded-md text-sm outline-none focus:border-[#f5576c] focus:ring-2 focus:ring-[#f5576c]/20 transition-all">
+                <label class="block text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-2 ml-1">College ID</label>
+                <input type="text" id="collegeId" name="collegeId" required placeholder="ID-12345"
+                       class="w-full px-5 py-4 bg-stone-50 rounded-2xl border-none focus:ring-2 focus:ring-amber-500 transition-all text-stone-700">
             </div>
 
             <div>
-                <label for="password" class="block mb-1 text-gray-800 font-medium">Password</label>
+                <label class="block text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-2 ml-1">Password</label>
                 <input type="password" id="password" name="password" required minlength="6" placeholder="At least 6 characters"
-                       class="w-full p-3 border border-gray-300 rounded-md text-sm outline-none focus:border-[#f5576c] focus:ring-2 focus:ring-[#f5576c]/20 transition-all">
+                       class="w-full px-5 py-4 bg-stone-50 rounded-2xl border-none focus:ring-2 focus:ring-amber-500 transition-all text-stone-700">
             </div>
 
             <div>
-                <label for="confirmPassword" class="block mb-1 text-gray-800 font-medium">Confirm Password</label>
-                <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="Re-enter password"
-                       class="w-full p-3 border border-gray-300 rounded-md text-sm outline-none focus:border-[#f5576c] focus:ring-2 focus:ring-[#f5576c]/20 transition-all">
+                <label class="block text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-2 ml-1">Confirm Password</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="••••••••"
+                       class="w-full px-5 py-4 bg-stone-50 rounded-2xl border-none focus:ring-2 focus:ring-amber-500 transition-all text-stone-700">
             </div>
 
             <input type="hidden" name="role" value="student">
 
-            <button type="submit" 
-                    class="w-full p-3 bg-gradient-to-r from-[#f093fb] to-[#f5576c] text-white rounded-md font-semibold text-lg hover:-translate-y-0.5 transition-transform active:translate-y-0 shadow-md">
+            <button type="submit" class="md:col-span-2 py-5 bg-stone-900 text-white rounded-2xl font-bold text-lg hover:bg-amber-800 transition-all shadow-xl shadow-stone-900/20 active:scale-95 mt-4">
                 Create Account
             </button>
         </form>
 
-        <div class="text-center mt-6 text-gray-500 text-sm">
-            Already have an account? <a href="/login" class="text-[#f5576c] font-bold hover:underline">Login Here</a>
+        <div class="text-center mt-8 text-stone-500 text-sm">
+            Already a member? <a href="/login" class="text-amber-600 font-bold hover:underline underline-offset-4">Sign In</a>
         </div>
     </div>
+
+    <footer class="mt-12 text-stone-400 text-[10px] uppercase tracking-[0.2em]">
+        &copy; 2026 Cafe Delight System
+    </footer>
 
     <script>
         // Simple frontend check to ensure passwords match

@@ -3,73 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Cart | Cafe Food</title>
+    <title>My Selection | Cafe Delight</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-serif { font-family: 'Playfair Display', serif; }
+        .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.05); }
+    </style>
 </head>
-<body class="bg-gray-50 min-h-screen">
-
-    <nav class="bg-white shadow-sm p-4 mb-8">
-        <div class="max-w-4xl mx-auto flex justify-between items-center">
-            <a href="/user-dashboard" class="text-orange-500 font-bold">← Back to Menu</a>
-            <h1 class="text-xl font-black text-gray-800 uppercase">Cafe Food</h1>
-            <div class="w-20"></div> </div>
+<body class="bg-stone-50 text-stone-900 min-h-screen">
+    <nav class="sticky top-0 z-50 glass px-6 py-5 flex justify-between items-center">
+        <a href="/" class="text-2xl font-serif font-bold text-amber-900 tracking-tight">Cafe<span class="text-amber-600">Delight</span></a>
+        <a href="/user-dashboard" class="font-bold text-stone-500 hover:text-stone-900 transition-all flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            Back to Menu
+        </a>
     </nav>
 
-    <main class="max-w-3xl mx-auto px-4">
-        <div class="bg-white rounded-3xl shadow-sm p-8">
-            <h2 class="text-3xl font-black text-gray-900 mb-8">Your Cart</h2>
+    <main class="max-w-7xl mx-auto px-6 py-12 md:py-20 grid grid-cols-1 lg:grid-cols-3 gap-16">
+        <div class="lg:col-span-2 space-y-12">
+            <h1 class="font-serif text-5xl md:text-6xl text-stone-900">My <span class="italic text-amber-600">Selection</span></h1>
 
             <% if (cart.length === 0) { %>
-                <div class="text-center py-10">
-                    <p class="text-gray-400">Your cart is empty.</p>
-                    <a href="/user-dashboard" class="text-orange-500 font-bold mt-4 inline-block">Browse Food</a>
+                <div class="py-24 text-center border-2 border-dashed border-stone-200 rounded-[2.5rem] bg-white/30">
+                    <p class="text-stone-400 italic mb-6">Your cart is currently empty.</p>
+                    <a href="/user-dashboard" class="inline-block bg-stone-900 text-white px-10 py-4 rounded-full font-bold shadow-xl shadow-stone-900/10 active:scale-95 transition-all">Browse Menu</a>
                 </div>
             <% } else { %>
                 <div class="space-y-6">
                     <% cart.forEach(item => { %>
-                        <div class="flex justify-between items-center border-b pb-6 last:border-0">
-                            <div>
-                                <h4 class="text-lg font-bold text-gray-800"><%= item.name %></h4>
-                                <p class="text-gray-400">$<%= item.price %> x <%= item.quantity %></p>
-                                
-                                <div class="flex items-center gap-4 mt-2">
-                                    <a href="/cart/dec/<%= item.id %>" class="bg-gray-100 px-3 py-1 rounded-lg font-bold">-</a>
-                                    <span class="font-bold"><%= item.quantity %></span>
-                                    <a href="/cart/inc/<%= item.id %>" class="bg-gray-100 px-3 py-1 rounded-lg font-bold">+</a>
-                                    <a href="/cart/rem/<%= item.id %>" class="text-red-400 text-xs ml-4 uppercase font-bold">Remove</a>
-                                </div>
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-8 pb-8 border-b border-stone-200 group">
+                            <div class="flex-grow">
+                                <h3 class="text-2xl font-bold text-stone-900 mb-1"><%= item.name %></h3>
+                                <p class="text-amber-600 font-bold text-lg">₹<%= item.price %></p>
                             </div>
-                            <div class="text-right">
-                                <p class="text-xl font-black text-gray-900">$<%= (item.price * item.quantity).toFixed(2) %></p>
+                            <div class="flex items-center gap-10">
+                                <div class="flex items-center bg-white rounded-2xl border border-stone-200 p-1">
+                                    <a href="/cart/dec/<%= item.id %>" class="w-10 h-10 flex items-center justify-center hover:bg-stone-50 rounded-xl transition-colors font-bold">-</a>
+                                    <span class="w-12 text-center font-bold text-lg"><%= item.quantity %></span>
+                                    <a href="/cart/inc/<%= item.id %>" class="w-10 h-10 flex items-center justify-center hover:bg-stone-50 rounded-xl transition-colors font-bold">+</a>
+                                </div>
+                                <div class="text-right w-24">
+                                    <p class="font-black text-2xl text-stone-900">₹<%= (item.price * item.quantity).toFixed(2) %></p>
+                                </div>
+                                <a href="/cart/rem/<%= item.id %>" class="text-stone-300 hover:text-red-500 transition-colors active:scale-90">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                </a>
                             </div>
                         </div>
                     <% }) %>
                 </div>
+            <% } %>
+        </div>
 
-                <div class="mt-10 p-6 bg-orange-50 rounded-2xl border border-orange-100 flex justify-between items-center">
-                    <span class="text-gray-600 font-bold uppercase tracking-widest text-sm">Total Amount</span>
-                    <span class="text-3xl font-black text-orange-600">$<%= total.toFixed(2) %></span>
+        <aside class="lg:sticky lg:top-32 h-fit">
+            <div class="bg-white rounded-[2.5rem] p-10 shadow-2xl shadow-stone-200/50 border border-stone-100">
+                <h2 class="font-serif text-3xl mb-8">Summary</h2>
+                <div class="space-y-4 mb-10 text-stone-500">
+                    <div class="flex justify-between font-medium">
+                        <span>Subtotal</span>
+                        <span class="text-stone-900 font-bold">₹<%= total.toFixed(2) %></span>
+                    </div>
+                    <div class="flex justify-between font-medium">
+                        <span>Service Fee</span>
+                        <span class="text-stone-900 font-bold">₹0.00</span>
+                    </div>
+                    <div class="pt-6 border-t border-stone-100 flex justify-between items-end">
+                        <span class="text-stone-900 font-bold text-lg uppercase tracking-widest">Total</span>
+                        <span class="text-4xl font-black text-amber-600">₹<%= total.toFixed(2) %></span>
+                    </div>
                 </div>
 
-                <div class="mt-8">
+                <% if (cart.length > 0) { %>
                     <% if (user) { %>
                         <form action="/checkout" method="POST">
-                            <button type="submit" class="w-full bg-green-500 text-white py-4 rounded-2xl font-black text-xl hover:bg-green-600 transition shadow-lg">
-                                CONFIRM ORDER
+                            <button type="submit" class="w-full bg-stone-900 text-white py-5 rounded-2xl font-bold text-xl hover:bg-amber-800 transition-all shadow-2xl shadow-stone-900/30 active:scale-95">
+                                Confirm Order
                             </button>
                         </form>
                     <% } else { %>
                         <div class="space-y-4">
-                            <p class="text-center text-gray-400 text-sm italic font-medium">Please login to complete your transaction</p>
-                            <a href="/login" class="block w-full text-center bg-blue-600 text-white py-4 rounded-2xl font-black text-xl hover:bg-blue-700 transition shadow-lg">
-                                LOGIN TO CHECKOUT
+                            <p class="text-center text-stone-400 text-sm italic font-medium">Please login to place your order</p>
+                            <a href="/login" class="block w-full text-center bg-amber-700 text-white py-5 rounded-2xl font-bold text-xl hover:bg-amber-800 transition shadow-2xl shadow-amber-900/20 active:scale-95">
+                                Login to Checkout
                             </a>
                         </div>
                     <% } %>
+                <% } %>
+                
+                <div class="mt-8 pt-8 border-t border-stone-50 flex items-center gap-4 text-stone-400">
+                    <div class="bg-stone-50 p-3 rounded-full">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                    </div>
+                    <div class="text-[10px] uppercase font-black tracking-widest leading-tight">
+                        Secure Artisanal <br> Transaction
+                    </div>
                 </div>
-            <% } %>
-        </div>
+            </div>
+        </aside>
     </main>
-
 </body>
 </html>
