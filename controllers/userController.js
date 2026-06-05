@@ -106,6 +106,7 @@ exports.checkout = async (req, res) => {
     if (req.session.cart.length === 0) return res.redirect('/cart');
     
     try {
+        const { address, paymentMethod } = req.body;
         const total = req.session.cart.reduce((s, i) => s + (i.price * i.quantity), 0);
         
         await Order.create({
@@ -117,6 +118,8 @@ exports.checkout = async (req, res) => {
                 price: i.price
             })),
             totalAmount: total,
+            address: address,
+            paymentMethod: paymentMethod,
             status: 'Pending'
         });
         

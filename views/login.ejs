@@ -6,6 +6,7 @@
     <title>Login | Cafe Delight</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
         body { font-family: 'Inter', sans-serif; background: radial-gradient(circle at top right, #fffbeb, #fafaf9); }
         .font-serif { font-family: 'Playfair Display', serif; }
@@ -48,8 +49,13 @@
 
             <div>
                 <label class="block text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-2 ml-1">Password</label>
-                <input type="password" id="password" name="password" required placeholder="••••••••"
-                       class="w-full px-5 py-4 bg-stone-50 rounded-2xl border-none focus:ring-2 focus:ring-amber-500 transition-all text-stone-700 placeholder:text-stone-300">
+                <div class="relative">
+                    <input type="password" id="password" name="password" required placeholder="••••••••"
+                           class="w-full px-5 py-4 bg-stone-50 rounded-2xl border-none focus:ring-2 focus:ring-amber-500 transition-all text-stone-700 placeholder:text-stone-300 pr-12">
+                    <button type="button" id="togglePassword" class="absolute right-4 top-1/2 -translate-y-1/2 text-stone-400 hover:text-amber-600 focus:outline-none">
+                        <i class="fas fa-eye" id="eyeIcon"></i>
+                    </button>
+                </div>
             </div>
 
             <button type="submit" class="w-full py-5 bg-stone-900 text-white rounded-2xl font-bold text-lg hover:bg-amber-800 transition-all shadow-2xl shadow-stone-900/30 active:scale-95">
@@ -65,5 +71,21 @@
     <footer class="mt-12 text-stone-400 text-[10px] uppercase tracking-[0.2em]">
         &copy; 2026 Cafe Delight System
     </footer>
+
+    <script>
+        const togglePassword = document.querySelector('#togglePassword');
+        const password = document.querySelector('#password');
+        const eyeIcon = document.querySelector('#eyeIcon');
+
+        togglePassword.addEventListener('click', function () {
+            // Toggle the type attribute
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+            
+            // Toggle the eye icon class
+            eyeIcon.classList.toggle('fa-eye');
+            eyeIcon.classList.toggle('fa-eye-slash');
+        });
+    </script>
 </body>
 </html>
